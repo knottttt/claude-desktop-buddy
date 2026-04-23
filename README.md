@@ -18,7 +18,7 @@
 
 ### 1) VS Code bridge (`vscode-buddy/`)
 
-- Polls local Claude activity from `~/.claude/projects/*.jsonl`
+- Polls both Claude (`~/.claude/projects/**/*.jsonl`) and Codex (`~/.codex/sessions/**/*.jsonl`); picks the most recently active source
 - Pushes status to device every 800ms
 - Provides a sidebar panel for bridge lifecycle and hardware control
 
@@ -47,7 +47,7 @@
 ## Recent fixes
 
 - Fixed false `waiting approval` / `attention` state for long-running normal tool calls.
-- Codex calls now enter approval-waiting only when the call explicitly requests escalated sandbox permission (`sandbox_permissions=require_escalated`).
+- Codex tool calls show `busy` (not `attention`) by default; `attention` is only triggered when the call explicitly requests sandboxed permission escalation.
 - Prevents unintended LED blinking caused by non-approval command execution.
 - Added regression tests in `vscode-buddy/src/activityTracker.test.ts`.
 
@@ -61,19 +61,27 @@ pio run -t upload
 
 ### VS Code extension
 
+Install the pre-built VSIX:
+
 ```bash
-cd vscode-buddy
-npm install
-npm run compile
+code --install-extension vscode-buddy/claude-buddy-serial-0.1.0.vsix
 ```
 
-Open the extension in Extension Development Host, then open the
-`Claude Buddy Serial` panel and click `Start`.
+Then reload VS Code, open the `Claude Buddy Serial` panel and click `Start`.
 
 Default serial settings:
 
 - Port: `COM4`
 - Baud: `115200`
+
+To build from source instead:
+
+```bash
+cd vscode-buddy
+npm install
+npm run compile
+npx vsce package
+```
 
 ## Project direction
 
